@@ -1,8 +1,10 @@
-import { FC } from 'react';
+import { ChangeEvent, FC, memo } from 'react';
 import styled from '@emotion/styled';
 
 export interface LevelProps {
   children: string[];
+  onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+  value: string;
 }
 
 const Select = styled.select`
@@ -22,10 +24,14 @@ const Option = styled.option`
   padding: 0 0.2vw 0.2vw;
 `;
 
-export const Level: FC<LevelProps> = ({ children }) => (
-  <Select>
+export const Level: FC<LevelProps> = memo(({ children, onChange }) => (
+  <Select onChange={onChange}>
     {children.map((item: string) => (
-      <Option key={item}>{item}</Option>
+      <Option key={item} role="checkbox">
+        {item}
+      </Option>
     ))}
   </Select>
-);
+));
+
+Level.displayName = 'Level';

@@ -1,4 +1,4 @@
-import { Field, Coords } from '../../helpers/Field';
+import { Field, Coords } from '../../core/Field';
 import { FC } from 'react';
 import Cell from './Cell';
 import styled from '@emotion/styled';

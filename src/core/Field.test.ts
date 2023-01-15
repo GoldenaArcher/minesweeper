@@ -1,5 +1,4 @@
-import { table } from 'console';
-import { emptyFieldGenerator, CellState, fieldGenerator, Cell } from './Field';
+import { generateFieldWithDefaultState, CellState, fieldGenerator, Cell } from './Field';
 const { empty, hidden, bomb } = CellState;
 
 const cellWithBombFilter = (cell: Cell) => cell === bomb;
@@ -7,17 +6,17 @@ const cellWithBombFilter = (cell: Cell) => cell === bomb;
 describe('Field Generator', () => {
   describe('emptyFieldGenerator tests', () => {
     it('1x1', () => {
-      expect(emptyFieldGenerator(1)).toStrictEqual([[empty]]);
+      expect(generateFieldWithDefaultState(1)).toStrictEqual([[empty]]);
     });
     it('2x2', () => {
-      expect(emptyFieldGenerator(2)).toStrictEqual([
+      expect(generateFieldWithDefaultState(2)).toStrictEqual([
         [empty, empty],
         [empty, empty],
       ]);
     });
 
     it('3x3', () => {
-      expect(emptyFieldGenerator(3)).toStrictEqual([
+      expect(generateFieldWithDefaultState(3)).toStrictEqual([
         [empty, empty, empty],
         [empty, empty, empty],
         [empty, empty, empty],
@@ -25,7 +24,7 @@ describe('Field Generator', () => {
     });
 
     it('4x4', () => {
-      expect(emptyFieldGenerator(4, hidden)).toStrictEqual([
+      expect(generateFieldWithDefaultState(4, hidden)).toStrictEqual([
         [hidden, hidden, hidden, hidden],
         [hidden, hidden, hidden, hidden],
         [hidden, hidden, hidden, hidden],
@@ -90,10 +89,13 @@ describe('Field Generator', () => {
       const probability = mines / (size * size),
         field = fieldGenerator(size, probability);
 
-      table(field);
-
       const flatField = field.flat();
-      expect(flatField.filter(cellWithBombFilter)).toHaveLength(25);
+
+      expect([...field[0], ...field[1]].join('')).not.toBe(
+        '99999999999999999999'
+      );
+
+      expect(flatField.filter(cellWithBombFilter)).toHaveLength(mines);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { incrementNeighbors } from './CellsManipulator';
 export enum CellState {
   empty = '0',
   bomb = '9',
@@ -13,7 +14,7 @@ export type Cell = typeof cells[number];
 export type Field = Cell[][];
 export type Coords = [number, number];
 
-export const emptyFieldGenerator = (
+export const generateFieldWithDefaultState = (
   size: number,
   state: Cell = CellState.empty
 ): Field => Array.from(Array(size), () => new Array(size).fill(state));
@@ -22,17 +23,16 @@ export const fieldGenerator = (size: number, density: number): Field => {
   if (density > 1 || density < 0)
     throw new Error('Density must be between 0 and 1');
 
-  let unProcessedCell = size * size,
+  let unProcessedCell = size * size,  
     restCellsWithBombs = unProcessedCell * density;
 
-  const res: Field = emptyFieldGenerator(size);
+  const res: Field = generateFieldWithDefaultState(size);
 
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
-      if (restCellsWithBombs === 0) return res;
-
       if (restCellsWithBombs / unProcessedCell > Math.random()) {
         res[i][j] = CellState.bomb;
+        incrementNeighbors([i, j], res);
         restCellsWithBombs--;
       }
 

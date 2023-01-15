@@ -4,12 +4,34 @@ import {
   checkItemInField,
 } from './CellsManipulator';
 import { CellState, Field } from './Field';
-const { empty, hidden, bomb } = CellState;
+
+const { empty: e, hidden: h, bomb: b } = CellState;
+
+describe('checkItemInField tests', () => {
+  describe('Simple cases', () => {
+    const field: Field = [[e]];
+    it('Out of y range', () => {
+      expect(checkItemInField([1, 0], field)).toBe(false);
+    });
+
+    it('Out of y range with negative number', () => {
+      expect(checkItemInField([-1, 0], field)).toBe(false);
+    });
+
+    it('Out of x range', () => {
+      expect(checkItemInField([0, -1], field)).toBe(false);
+    });
+
+    it('In x and y range', () => {
+      expect(checkItemInField([0, 0], field)).toBe(true);
+    });
+  });
+});
 
 describe('Check Increment Neighbors', () => {
   describe('Simple cases', () => {
     it('Field with only 1 item', () => {
-      expect(incrementNeighbors([0, 0], [[bomb]])).toStrictEqual([[bomb]]);
+      expect(incrementNeighbors([0, 0], [[b]])).toStrictEqual([[b]]);
     });
 
     it('Field 2x2 with one mine', () => {
@@ -17,12 +39,12 @@ describe('Check Increment Neighbors', () => {
         incrementNeighbors(
           [0, 0],
           [
-            [bomb, empty],
-            [empty, empty],
+            [b, e],
+            [e, e],
           ]
         )
       ).toStrictEqual([
-        [bomb, '1'],
+        [b, '1'],
         ['1', '1'],
       ]);
     });
@@ -32,13 +54,13 @@ describe('Check Increment Neighbors', () => {
         incrementNeighbors(
           [0, 0],
           [
-            [bomb, empty],
-            [empty, bomb],
+            [b, e],
+            [e, b],
           ]
         )
       ).toStrictEqual([
-        [bomb, '1'],
-        ['1', bomb],
+        [b, '1'],
+        ['1', b],
       ]);
     });
 
@@ -47,14 +69,14 @@ describe('Check Increment Neighbors', () => {
         incrementNeighbors(
           [1, 1],
           [
-            [empty, empty, empty],
-            [empty, bomb, empty],
-            [empty, empty, empty],
+            [e, e, e],
+            [e, b, e],
+            [e, e, e],
           ]
         )
       ).toStrictEqual([
         ['1', '1', '1'],
-        ['1', bomb, '1'],
+        ['1', b, '1'],
         ['1', '1', '1'],
       ]);
     });
@@ -84,27 +106,6 @@ describe('Check Increment Neighbors', () => {
         bottomLeft: [4, 2],
         left: [3, 2],
         leftTop: [2, 2],
-      });
-    });
-  });
-
-  describe('checkItemInField tests', () => {
-    describe('Simple cases', () => {
-      const field: Field = [[empty]];
-      it('Out of y range', () => {
-        expect(checkItemInField([1, 0], field)).toBe(false);
-      });
-
-      it('Out of y range with negative number', () => {
-        expect(checkItemInField([-1, 0], field)).toBe(false);
-      });
-
-      it('Out of x range', () => {
-        expect(checkItemInField([0, -1], field)).toBe(false);
-      });
-
-      it('In x and y range', () => {
-        expect(checkItemInField([0, 0], field)).toBe(true);
       });
     });
   });

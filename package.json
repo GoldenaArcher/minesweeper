@@ -21,9 +21,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:nowatch": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "prepare": "husky install",
+    "chromatic": "npx chromatic",
+    "test:mutate": "stryker run"
   },
   "eslintConfig": {
     "extends": [
@@ -66,11 +70,14 @@
     "@storybook/testing-library": "0.0.13",
     "@stryker-mutator/core": "^6.3.1",
     "@stryker-mutator/jest-runner": "^6.3.1",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^16.18.11",
     "babel-plugin-named-exports-order": "0.0.2",
+    "husky": "^8.0.2",
     "jest-watch-typeahead": "^0.6.5",
     "prop-types": "^15.8.1",
     "webpack": "^5.75.0"
   },
-  "type": "module"
+  "readme": "ERROR: No README data found!",
+  "_id": "minesweeper@0.1.0"
 }

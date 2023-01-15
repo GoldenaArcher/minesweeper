@@ -7,9 +7,6 @@ describe('Reset button check', () => {
 
   it('Should render elements with default state', () => {
     render(<ResetWithDummyHandlerOnReset />);
-
-    screen.debug();
-
     expect(screen.getByText('🙂')).toBeInTheDocument();
   });
 

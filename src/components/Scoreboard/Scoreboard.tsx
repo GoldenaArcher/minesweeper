@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { Counter } from './Counter';
 import { Level } from './Level';
 import { Reset } from './Reset';
@@ -28,6 +28,8 @@ export interface ScoreboardProps {
    * Bombs in the field
    */
   mines: string;
+  onChangeLevel: (e: ChangeEvent<HTMLSelectElement>) => void;
+  defaultLevel: string;
 }
 
 export const Scoreboard: FC<ScoreboardProps> = ({
@@ -35,10 +37,12 @@ export const Scoreboard: FC<ScoreboardProps> = ({
   levels,
   mines,
   onReset,
+  onChangeLevel,
+  defaultLevel
 }) => (
   <Wrapper>
     <Counter>{time}</Counter>
-    <Level>{levels}</Level>
+    <Level onChange={onChangeLevel} value={defaultLevel}>{levels}</Level>
     <Reset onReset={onReset} />
     <Counter>{mines}</Counter>
   </Wrapper>

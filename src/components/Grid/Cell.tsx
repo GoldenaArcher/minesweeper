@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
-import { Cell as CellType, CellState, Coords } from '../../helpers/Field';
-import { FC } from 'react';
-import { useMouseDown } from '../../hooks/useMouseDown';
+import { Cell as CellType, CellState, Coords } from '../../core/Field';
+import { FC, memo } from 'react';
+import { useMouseDown } from '../hooks/useMouseDown';
 
 const transparent = 'rgba(0, 0, 0, 0)';
 
 const colors: { [key in CellType]: string } = {
-  '0': '#000',
+  '0': transparent,
   '1': '#2a48ec',
   '2': '#2bb13d',
   '3': '#ec6561',
@@ -35,6 +35,7 @@ const ClosedFrame = styled.div<ClosedFrameProps>`
   height: 1.8vw;
   background-color: #d1d1d1;
   border: 0.6vh solid transparent;
+  color: ${({ children }) => colors[children as CellType] ?? transparent};
   border-color: ${({ mousedown = false }) =>
     mousedown ? 'transparent' : 'white #9e9e9e #9e9e9e white'};
   &:hover {
@@ -85,7 +86,7 @@ interface ComponentsMapProps {
   children: CellType;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   onContextMenu: (e: React.MouseEvent<HTMLElement>) => void;
-  'data-testId'?: string;
+  'data-testid'?: string;
   onMouseDown: () => void;
   onMouseUp: () => void;
   onMouseLeave: () => void;
@@ -95,14 +96,15 @@ interface ComponentsMapProps {
 const ComponentsMap: FC<ComponentsMapProps> = ({ children, ...rest }) => {
   const nonActiveCellProps = {
     onContextMenu: rest.onContextMenu,
-    'data-testId': rest['data-testId'],
+    'data-testid': rest['data-testid'],
+    role: 'cell',
   };
 
   switch (children) {
     case CellState.empty:
-      return <RevealedFrame {...nonActiveCellProps} />;
+      return <RevealedFrame {...nonActiveCellProps}>{children}</RevealedFrame>;
     case CellState.hidden:
-      return <ClosedFrame {...rest} />;
+      return <ClosedFrame {...rest}>{children}</ClosedFrame>;
     case CellState.bomb:
       return (
         <BombFrame {...nonActiveCellProps}>
@@ -131,7 +133,23 @@ export const checkIsActiveCell = (cell: CellType): boolean =>
     cell as CellState
   );
 
-const Cell: FC<CellProps> = ({ children, coords, ...rest }) => {
+export const areEqual = (
+  prevProps: CellProps,
+  nextProps: CellProps
+): boolean => {
+  const areEqualCoords =
+    prevProps.coords.filter((coord, idx) => nextProps.coords[idx] !== coord)
+      .length === 0;
+
+  return (
+    prevProps.children === nextProps.children &&
+    areEqualCoords &&
+    prevProps.onClick === nextProps.onClick &&
+    prevProps.onContextMenu === nextProps.onContextMenu
+  );
+};
+
+const Cell: FC<CellProps> = memo(({ children, coords, ...rest }) => {
   const [mousedown, onMouseDown, onMouseUp] = useMouseDown();
   const onClick = () => rest.onClick(coords);
 
@@ -145,14 +163,17 @@ const Cell: FC<CellProps> = ({ children, coords, ...rest }) => {
   const props = {
     onClick,
     onContextMenu,
-    'data-testId': `${children}_${coords}`,
+    'data-testid': `${coords}`,
     onMouseDown,
     onMouseUp,
     onMouseLeave: onMouseUp,
     mousedown,
+    role: 'cell',
   };
 
   return <ComponentsMap {...props}>{children}</ComponentsMap>;
-};
+}, areEqual);
+
+Cell.displayName = 'Cell';
 
 export default Cell;

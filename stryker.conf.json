@@ -10,5 +10,12 @@
   "coverageAnalysis": "off",
   "jest": {
     "projectType": "create-react-app"
-  }
+  },
+  "mutate": [
+    "{src,lib}/**/!(*.+(s|S)pec|*.+(t|T)est).+(cjs|mjs|js|ts|jsx|tsx|html|vue)",
+    "!{src,lib}/**/__tests__/**/*.+(cjs|mjs|js|ts|jsx|tsx|html|vue)",
+    "!{src,lib}/**/*@(.test|.spec|Spec|stories|styled).ts?(x)",
+    "!{src,lib}/**/__mocks__/**/*",
+    "!{src,lib}/**/__snapshots__/**/*"
+  ]
 }

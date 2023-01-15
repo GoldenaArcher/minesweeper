@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react';
 import Cell, { CellProps } from './Cell';
-import { CellState } from '../../helpers/Field';
+import { CellState } from '../../core/Field';
 
 export default {
   title: 'Grid/Cell',

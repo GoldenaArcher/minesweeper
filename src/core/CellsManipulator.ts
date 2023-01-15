@@ -1,6 +1,4 @@
-import { Coords, Field, CellState, Cell } from './Field';
-
-const { bomb } = CellState;
+import { Coords, Field, Cell } from './Field';
 
 export const getNeighborsItems = ([y, x]: Coords): Record<
   string,
@@ -17,19 +15,16 @@ export const getNeighborsItems = ([y, x]: Coords): Record<
 });
 
 export const checkItemInField = ([y, x]: Coords, { length }: Field): boolean =>
-  y >= 0 && x >= 0 && y < length && x < length;
-
-const canBeIncremented = ([y, x]: Coords, field: Field) => +field[y][x] < +bomb;
+  y >= 0 && x >= 0 && length - y > 0 && length - x > 0;
 
 export const incrementNeighbors = (coords: Coords, field: Field): Field => {
   const items = getNeighborsItems(coords);
 
-  for (const item of Object.values(items)) {
-    if (checkItemInField(item, field)) {
-      const [y, x] = item;
+  for (const [y, x] of Object.values(items)) {
+    if (checkItemInField([y, x], field)) {
       const cell = field[y][x];
 
-      if (canBeIncremented([y, x], field))
+      if (cell < '8')
         field[y][x] = (+cell + 1).toString() as Cell;
     }
   }
