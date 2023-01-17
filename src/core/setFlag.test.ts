@@ -37,7 +37,7 @@ describe('set flag action', () => {
         [h, h, h],
       ];
 
-      const [playerFieldAfterFirstClick] = setFlag(
+      const playerFieldAfterFirstClick = setFlag(
         [0, 0],
         playerField,
         gameField,
@@ -45,35 +45,35 @@ describe('set flag action', () => {
         5
       );
 
-      expect(playerFieldAfterFirstClick).toStrictEqual([
+      expect(playerFieldAfterFirstClick[0]).toStrictEqual([
         [f, h, h],
         [h, h, h],
         [h, h, h],
       ]);
 
-      const [playerFieldAfterSecondClick] = setFlag(
+      const playerFieldAfterSecondClick = setFlag(
         [0, 0],
-        playerField,
+        playerFieldAfterFirstClick[0],
         gameField,
         1,
         5
       );
 
-      expect(playerFieldAfterSecondClick).toStrictEqual([
+      expect(playerFieldAfterSecondClick[0]).toStrictEqual([
         [w, h, h],
         [h, h, h],
         [h, h, h],
       ]);
 
-      const [playerFieldAfterThirdClick] = setFlag(
+      const playerFieldAfterThirdClick = setFlag(
         [0, 0],
-        playerField,
+        playerFieldAfterSecondClick[0],
         gameField,
         2,
         5
       );
 
-      expect(playerFieldAfterThirdClick).toStrictEqual([
+      expect(playerFieldAfterThirdClick[0]).toStrictEqual([
         [h, h, h],
         [h, h, h],
         [h, h, h],
@@ -186,11 +186,11 @@ describe('set flag action', () => {
         [f, h, h],
       ];
 
-      setFlag([0, 0], playerField, gameField, 2, 2);
-
       const result = setFlag([0, 0], playerField, gameField, 2, 2);
 
-      expect(result).toStrictEqual([
+      const result1 = setFlag([0, 0], result[0], gameField, 2, 2);
+
+      expect(result1).toStrictEqual([
         [
           [h, h, h],
           [h, h, h],
@@ -200,7 +200,7 @@ describe('set flag action', () => {
         1,
       ]);
 
-      const result2 = setFlag([0, 0], playerField, gameField, 1, 2);
+      const result2 = setFlag([0, 0], result1[0], gameField, 1, 2);
 
       expect(result2).toStrictEqual([
         [

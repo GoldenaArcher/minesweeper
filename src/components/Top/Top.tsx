@@ -12,11 +12,13 @@ const Header = styled.header`
 
 export type TopComponentType = LegendProps & GameNameProps;
 
-export const Top: FC<TopComponentType> = memo(({ name, ...legendProps }) => (
-  <Header>
-    <GameName name={name} />
-    <Legend {...legendProps} />
-  </Header>
-));
+export const Top: FC<TopComponentType> = memo(
+  ({ name, children, ...legendProps }) => (
+    <Header>
+      <GameName name={name}>{children}</GameName>
+      <Legend {...legendProps} />
+    </Header>
+  )
+);
 
 Top.displayName = 'Top';

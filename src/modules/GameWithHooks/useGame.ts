@@ -29,12 +29,12 @@ interface ReturnType {
   isGameStarted: boolean;
 }
 
-export const useGame = (): ReturnType => {
+export const useGame = (defaultLevel = 'easy' as LevelNames): ReturnType => {
   const {
     settings: [size, bombs],
     level,
     setLevel,
-  } = useSettings();
+  } = useSettings(defaultLevel);
 
   const {
     isGameOver,
@@ -56,25 +56,36 @@ export const useGame = (): ReturnType => {
     fieldGenerator(size, bombs / (size * size))
   );
 
-  const onClick = (coords: Coords) => {
-    !isGameStarted && setInProgress();
-    if (isGameOver) return;
-    try {
-      const [newPlayerField, isSolved] = openCell(
-        coords,
-        playerField,
-        gameField
-      );
+  const onClick = useCallback(
+    (coords: Coords) => {
+      !isGameStarted && setInProgress();
+      if (isGameOver) return;
+      try {
+        const [newPlayerField, isSolved] = openCell(
+          coords,
+          playerField,
+          gameField
+        );
 
-      if (isSolved) {
-        setGameWin();
+        if (isSolved) {
+          setGameWin();
+        }
+        setPlayerField([...newPlayerField]);
+      } catch (e) {
+        setPlayerField([...gameField]);
+        setGameLoose();
       }
-      setPlayerField([...newPlayerField]);
-    } catch (e) {
-      setPlayerField([...gameField]);
-      setGameLoose();
-    }
-  };
+    },
+    [
+      isGameOver,
+      isGameStarted,
+      isWin,
+      level,
+      flagCounter,
+      playerField,
+      gameField,
+    ]
+  );
 
   const onContextMenu = useCallback(
     (coords: Coords) => {
@@ -94,7 +105,15 @@ export const useGame = (): ReturnType => {
       }
       setPlayerField([...newPlayerField]);
     },
-    [isGameStarted, isGameOver, isWin, level, flagCounter]
+    [
+      isGameStarted,
+      isGameOver,
+      isWin,
+      level,
+      flagCounter,
+      gameField,
+      playerField,
+    ]
   );
 
   const resetHandler = ([size, bombs]: [number, number]) => {
